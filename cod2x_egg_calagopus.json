@@ -1,0 +1,162 @@
+{
+  "uuid": "41fa2053-eccb-4e15-9e4d-7fb2a4ac1cea",
+  "name": "COD2x",
+  "description": "Call of Duty 2 Egg - Built for Calagopus panel, but should work with Pelican & Pterodactyl.\nNeed a legitimate CoD2 install to copy iwd files from /main/ folder into server.",
+  "author": "henwoodenator@gmail.com",
+  "config": {
+    "files": {
+      "server.cfg": {
+        "create_new": true,
+        "parser": "file",
+        "replace": [
+          {
+            "match": "\"seta sv_hostname\"",
+            "insert_new": true,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "seta sv_hostname \"{{server.build.env.SERVER_NAME}}\""
+          },
+          {
+            "match": "\"set rcon_password\"",
+            "insert_new": true,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "set rcon_password \"{{server.build.env.RCON_PASSWORD}}\""
+          },
+          {
+            "match": "\"set g_allowVote\"",
+            "insert_new": true,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "set g_allowVote \"{{server.build.env.ALLOW_VOTE}}\""
+          }
+        ]
+      }
+    },
+    "startup": {
+      "done": [
+        "CoD2x 1.4.6.8 loaded"
+      ],
+      "strip_ansi": false
+    },
+    "stop": {
+      "type": "command",
+      "value": "quit"
+    }
+  },
+  "scripts": {
+    "installation": {
+      "container": "ghcr.io/pelican-eggs/yolks:debian",
+      "entrypoint": "/bin/bash",
+      "content": "#!/bin/bash\n#\n##---------------------------------------------\n## henwoodenator's COD2x install script\n##---------------------------------------------\n## GAME:        COD2 w/ COD2x mod\n## DATE:        Nov 2026\n## PLATFORM:    Calagopus Panel\n## AUTHOR:      henwoodenator / drPyro / mister_apocalypse\n## CONTAINER:   Installer container ghcr.io/pelican-eggs/yolks:debian\n##              Running container ghcr.io/pelican-eggs/games:mohaa (had the i385 libdc++5 binaries inbuilt)\n#\n## DESCRIPTION: COD2x Install script for Calagopus Panel. May also work with Pelican / Pterodactyl \n#               but untested. Downloads COD2 server binaries, adds COD2x files.\n#\n## CREDITS: Me, the CoD2x team, Pelican Panel devs\n##---------------------------------------------\n#\n## Uncomment the below line if you want full verbose console output\n#set -x\n#\n##---------------------------------------------\n## INSTALL PREREQUSITES ##\n##---------------------------------------------\napt install bzip2\ncd /mnt/server\n##---------------------------------------------\n## DOWNLOAD & APPLY BASE FILES & PATCHES ##\n##---------------------------------------------\necho 'Download Server Files'\nwget -O cod2linux.tar.bz2 https://raw.githubusercontent.com/henwoodenator/Calagopus_Eggs/main/cod2x/cod2-lnxded-1.3-06232006.tar.bz2\necho 'Download CoD2x binaries'\nwget -O cod2x.zip https://raw.githubusercontent.com/henwoodenator/Calagopus_Eggs/main/cod2x/CoD2x_1.4.6.8_linux.zip\n# Expand downloaded files\ntar -xf cod2linux.tar.bz2\nmkdir cod2x\nunzip cod2x.zip -d cod2x\ncp cod2x/libCoD2x.so ./\n# Add execute permissions\nchmod +x libCoD2x.so\nchmod +x cod2_lnxded\n# Remove unneeded files\nrm -r cod2x cod2linux.tar.bz2 cod2x.zip\necho 'CoD2x Server install complete. Please ensure to mount game iwd files (from Call of Duty 2/main) to /mnt/cod2'\n"
+    }
+  },
+  "startup_commands": {
+    "Default": "cp /mnt/cod2/* /home/container/main && LD_PRELOAD=./libCoD2x.so ./cod2_lnxded +set net_port {{SERVER_PORT}} +set g_gametype {{GAME_TYPE}} +set sv_maxclient {{MAX_PLAYERS}} +map {{MAP}} +set dedicated 2 +exec server.cfg"
+  },
+  "force_outgoing_ip": false,
+  "separate_port": false,
+  "features": [],
+  "docker_images": {
+    "MOHAA": "ghcr.io/pelican-eggs/games:mohaa"
+  },
+  "file_denylist": [],
+  "variables": [
+    {
+      "name": "GAME_TYPE",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 1,
+      "env_variable": "GAME_TYPE",
+      "default_value": "dm",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "in:dm,tdm,sd,ctf,hq"
+      ]
+    },
+    {
+      "name": "Max Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 2,
+      "env_variable": "MAX_PLAYERS",
+      "default_value": "16",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "between:4,32"
+      ]
+    },
+    {
+      "name": "Map",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 3,
+      "env_variable": "MAP",
+      "default_value": "mp_carentan",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "string"
+      ]
+    },
+    {
+      "name": "Server Name",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 4,
+      "env_variable": "SERVER_NAME",
+      "default_value": "My CoD2x MP Server",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:25"
+      ]
+    },
+    {
+      "name": "Rcon Password",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 5,
+      "env_variable": "RCON_PASSWORD",
+      "default_value": "changeme",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "string",
+        "max:15"
+      ]
+    },
+    {
+      "name": "Allow Voting",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 6,
+      "env_variable": "ALLOW_VOTE",
+      "default_value": "1",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "in:0,1"
+      ]
+    }
+  ]
+}
