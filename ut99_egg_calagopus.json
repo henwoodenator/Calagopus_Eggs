@@ -1,0 +1,378 @@
+{
+  "uuid": "0f5c91cc-6197-44e3-8773-ec7f7494303a",
+  "name": "Unreal Tournament 1999",
+  "description": "UT99 server with MapVote, FastDL, master server + panel config",
+  "author": "henwoodenator@gmail.com",
+  "config": {
+    "files": {},
+    "startup": {
+      "done": [
+        "Game engine initialized"
+      ],
+      "strip_ansi": false
+    },
+    "stop": {
+      "type": "signal",
+      "value": "SIGINT"
+    }
+  },
+  "scripts": {
+    "installation": {
+      "container": "ghcr.io/pelican-eggs/yolks:debian",
+      "entrypoint": "/bin/bash",
+      "content": "#!/bin/bash\n#\n##---------------------------------------------\n## henwoodenator's UT99 Pelican install script\n##---------------------------------------------\n## GAME:        UT99 w/ Chaos\n## DATE:        Mar-Jun 2026\n## PLATFORM:    Pelican Panel\n## AUTHOR:      henwoodenator / drPyro / mister_apocalypse\n## CONTAINER:   Installer container ghcr.io/pelican-eggs/yolks:debian\n##              Running container ghcr.io/pelican-eggs/steamcmd:debian\n#\n## DESCRIPTION: UT99 Install script for Pelican Panel. May also work with Pterodactyl \n#               but untested. Downloads UT99 files, patches it, adds bonus packs, mutators etc. \n#               \n#               The original idea was to create a UT99 server that could run from standard Pelican\n#               panel images, both to deploy and run. Required a bit more complexity in the\n#               install script, but makes it easy to setup.\n#\n## CREDITS:     Much of this script is adapted from the github roemer UT99 image, all credit to him\n#               I've just adapted it to work in a Pelican / Pterodactyl panel environment. Ideally \n#               I'd fork the repo & point all my things there, but later maybe. Thanks to all the\n#               random UT99 & UT2004 forks, including GFXSpeed. They helped me understand how to \n#               write this install script.\n#               https://hub.docker.com/r/roemer/ut99-server https://github.com/Roemer/ut99-server\n#               https://github.com/GFXSpeed/ut2004_pterodactyl\n##---------------------------------------------\n#\n## Uncomment the below line if you want full verbose console output\n#set -x\n#\n##---------------------------------------------\n## INSTALL PREREQUSITES ##\n##---------------------------------------------\napt install bzip2\ncd /mnt/server\n##---------------------------------------------\n## DOWNLOAD & APPLY GAME/PATCH/BONUSPACKS/MUTATORS ##\n##---------------------------------------------\necho '[1/7] Base server'\n#wget -O ut-server.tar.gz https://github.com/IceOfWraith/UT99-Linux/archive/refs/heads/main.tar.gz\nwget -O ut-server.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/ut-server-linux-436.tar.gz\ntar -xzf ut-server.tar.gz\ncp -r ut-server/* ./\nrm -rf ut-server ut-server.tar.gz\n\necho '[2/7] Patch 469e'\nwget -O ut469e_64.tar.bz2 https://github.com/OldUnreal/UnrealTournamentPatches/releases/download/v469e/OldUnreal-UTPatch469e-Linux-amd64.tar.bz2\nwget -O ut469e_x86.tar.bz2 https://github.com/OldUnreal/UnrealTournamentPatches/releases/download/v469e/OldUnreal-UTPatch469e-Linux-x86.tar.bz2\ntar -xf ut469e_64.tar.bz2\ntar -xf ut469e_x86.tar.bz2\nrm ut469e_64.tar.bz2\nrm ut469e_x86.tar.bz2\n\necho '[3/7] Bonus packs 1-4'\nwget -O bp1.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/UTBonusPack1.tar.gz\nwget -O bp2.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/UTBonusPack2.tar.gz\nwget -O bp3.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/UTBonusPack3.tar.gz\nwget -O bp4.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/UTBonusPack4.tar.gz\ntar -xzf bp1.tar.gz\ntar -xzf bp2.tar.gz\ntar -xzf bp3.tar.gz\ntar -xzf bp4.tar.gz\nrm -f bp*.tar.gz\n\necho '[4/7] Mutators'\n#MapVoteLA13\nwget -O mapvote.zip https://unreal-archive-files-na.s3.ca-east-tor.io.cloud.ovh.net/Unreal%20Tournament/Mutators/M/8/8/c441c8/MapvoteLA13.zip\nunzip -o mapvote.zip\nrm -f mapvote.zip\n\n#FlagAnnouncementsV2\nwget -O flagann.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mutators/FlagAnnouncementsV2.tar.gz\ntar -xzf flagann.tar.gz\nrm -f flagann.tar.gz\n\n#Kick Idle Players\nwget -O kip.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mutators/KickIdlePlayers2.tar.gz\ntar -xzf kip.tar.gz\nrm -f kip.tar.gz\n\n#WhoPushedMe\nwget -O wpm.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mutators/WhoPushedMe.tar.gz\ntar -xzf wpm.tar.gz\nrm -f wpm.tar.gz\n\necho '[5/7] Mods'\n#Chaos UT\nwget -O chaosut.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mods/chaosut_v1.1.tar.gz\ntar -xzf chaosut.tar.gz\nrm -f chaosut.tar.gz\n\n#MonsterHunt\nwget -O monsterhunt.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mods/MonsterHunt613.tar.gz\ntar -xzf monsterhunt.tar.gz\nrm -f monsterhunt.tar.gz\n\n#InstaGibPlus\nwget -O igp.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mutators/InstaGibPlus_10B.tar.gz\ntar -xzf igp.tar.gz\nrm -f igp.tar.gz\n\n#BunnyTrack\nwget -O btpp.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Mods/BTPlusPlusPublicUTBT_beta3.tar.gz\ntar -xzf btpp.tar.gz\nrm -f btpp.tar.gz\n\necho '[6/7] Maps'\nwget -O chaosmaps-1.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Maps-Packed/chaosut_gotymappack.tar.gz\nwget -O chaosmaps-2.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Maps-Packed/chaosut_beta4mappack.tar.gz\ntar -xzf chaosmaps-1.tar.gz\ntar -xzf chaosmaps-2.tar.gz\nrm -f chaosmaps-*.tar.gz\n\n#BunnyTrack maps\nwget -O bt-maps-feb.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Maps-Packed/FEB-Classic-BT-Map-Pack.tar.gz\nwget -O bt-maps-hammerize.tar.gz https://raw.githubusercontent.com/henwoodenator/ut99-pelican-egg/main/files/Maps-Packed/CTF-BT-Hammerize.tar.gz\ntar -xzf bt-maps-feb.tar.gz\ntar -xzf bt-maps-hammerize.tar.gz\nrm -f bt-maps-*.tar.gz\n\n##---------------------------------------------\n## MAKE BINARIES EXECUTABLE ##\n##---------------------------------------------\necho '[7/7] Config'\nchmod +x System/ucc-bin-x86\nchmod +x System64/ucc-bin-amd64\n\n## Fix libSDL-1.2.so missing library error\n## Not needed if using the amd64 binary, but this gets the x86 one working\nln -s System/libSDL-1.1.so.0 System/libSDL-1.2.so.0\n\n##---------------------------------------------\n## CREATE UT99_START.SH SCRIPT ##\n##---------------------------------------------\necho 'Creating ut99_start.sh script'\ncat << 'EOF' > ut99_start.sh\n#!/usr/bin/env bash\n#\n##---------------------------------------------\n## henwoodenator's UT99 Pelican start script\n##---------------------------------------------\n## GAME:        UT99 w/ Chaos\n## DATE:        Mar-Jun 2026\n## PLATFORM:    Pelican Panel\n## AUTHOR:      henwoodenator / drPyro / mister_apocalypse\n#\n## DESCRIPTION: Copies variables into both config files & starts server. Almost everything that\n#               needs to be a variable has been passed. Uses awk as sed was getting a bit crazy\n#               (a-la me not being smart enough), and the INI file has too many duplicate names\n#               under different sections for json updating via the panel UI.\n#\n## CREDITS:     Much of this script is adapted from the github roemer UT99 image, all credit to him\n#               I've just adapted it to work in a Pelican / Pterodactyl panel environment. Ideally \n#               I'd fork the repo & point all my things there, but later maybe. Thanks to all the\n#               random UT99 & UT2004 forks, including GFXSpeed. They helped me understand how to \n#               write the install script.\n##---------------------------------------------\n## Uncomment the below 2x lines if you want full verbose console output\n#set -x\n#set -euo pipefail\n#\n## Copy the default *.ini files to the home/container dir\ncp System/UnrealTournament.ini.PATCH $HOME/UT.ini\ncp System/User.ini $HOME/UTUser.ini\n#\n## Set variables for ini locations to make scripting easier\nCONFIG=\"$HOME/UT.ini\"\nUSERCFG=\"$HOME/UTUser.ini\"\n#\n#------------------------------------------------\n## DEFINE LOGIC ##\n#------------------------------------------------\n## ini_set - Updates key, will add section & key if missing\n## EXAMPLE: ini_set \"$CONFIG\" \"IpDrv.TcpNetDriver\" \"NetServerMaxTickRate\" \"30\"\nini_set() {\n    # Add/update key, create section if missing\n    local file=\"$1\"\n    local section=\"$2\"\n    local key=\"$3\"\n    local value=\"$4\"\n\n    awk -v section=\"$section\" -v key=\"$key\" -v value=\"$value\" '\n    BEGIN { in_section=0; found=0; section_found=0 }\n\n    # Enter target section\n    $0 ~ \"^\\\\[\" section \"\\\\][[:space:]]*$\" {\n        in_section=1\n        found=0\n        section_found=1\n        print\n        next\n    }\n\n    # Any new section ends current one\n    /^\\[/ && in_section {\n        if (!found) print key \"=\" value\n        in_section=0\n    }\n\n    # Replace key\n    in_section && $0 ~ \"^[[:space:]]*\" key \"=\" {\n        print key \"=\" value\n        found=1\n        next\n    }\n\n    { print }\n\n    END {\n        if (in_section && !found) {\n            print key \"=\" value\n        }\n        if (!section_found) {\n            print \"\"\n            print \"[\" section \"]\"\n            print key \"=\" value\n        }\n    }\n    ' \"$file\" > \"$file.tmp\" && mv \"$file.tmp\" \"$file\"\n}\n## ini_delete_key - Deletes a key inside a specified section\n## EXAMPLE: ini_delete_key \"$CONFIG\" \"IpDrv.TcpNetDriver\" \"SimLatency\"\nini_delete_key() {\n    # Delete a key ONLY inside a section\n    local file=\"$1\"\n    local section=\"$2\"\n    local key=\"$3\"\n\n    awk -v section=\"$section\" -v key=\"$key\" '\n    BEGIN { in_section=0 }\n\n    $0 ~ \"^\\\\[\" section \"\\\\][[:space:]]*$\" {\n        in_section=1\n        print\n        next\n    }\n\n    /^\\[/ && in_section {\n        in_section=0\n    }\n\n    # Skip matching key inside section\n    in_section && $0 ~ \"^[[:space:]]*\" key \"=\" {\n        next\n    }\n\n    { print }\n    ' \"$file\" > \"$file.tmp\" && mv \"$file.tmp\" \"$file\"\n}\n## ini_add_section - Adds empty section if not exist. Called by ini_set\n## EXAMPLE: ini_add_section \"$CONFIG\" \"NewSection\"\nini_add_section() {\n    # Add section if it doesn't exist\n    local file=\"$1\"\n    local section=\"$2\"\n\n    if ! grep -q \"^\\[$section\\]\" \"$file\"; then\n        printf \"\\n[%s]\\n\" \"$section\" >> \"$file\"\n    fi\n}\n## ini_add_array_value - For sections that use an array with multiple identical named entries\n##    i.e. ServerActors below\n## EXAMPLE: ini_add_array_value \"$CONFIG\" \"IpDrv.TcpNetDriver\" \"DownloadManagers\" \"My.NewManager\"\nini_add_array_value() {\n    local file=\"$1\"\n    local section=\"$2\"\n    local key=\"$3\"\n    local value=\"$4\"\n\n    awk -v section=\"$section\" -v key=\"$key\" -v value=\"$value\" '\n    BEGIN { in_section=0; exists=0 }\n\n    $0 ~ \"^\\\\[\" section \"\\\\][[:space:]]*$\" {\n        in_section=1\n        print\n        next\n    }\n\n    /^\\[/ && in_section {\n        if (!exists) print key \"=\" value\n        in_section=0\n    }\n\n    in_section && $0 == key \"=\" value {\n        exists=1\n    }\n\n    { print }\n\n    END {\n        if (in_section && !exists) {\n            print key \"=\" value\n        }\n    }\n    ' \"$file\" > \"$file.tmp\" && mv \"$file.tmp\" \"$file\"\n}\n## ini_remove_array_value - Opposite of add. Removes values which have duplicate names\n## EXAMPLE: ini_remove_array_value \"$CONFIG\" \"IpDrv.TcpNetDriver\" \"DownloadManagers\" \"IpDrv.HTTPDownload\"\nini_remove_array_value() {\n    local file=\"$1\"\n    local section=\"$2\"\n    local key=\"$3\"\n    local value=\"$4\"\n\n    awk -v section=\"$section\" -v key=\"$key\" -v value=\"$value\" '\n    BEGIN { in_section=0 }\n\n    $0 ~ \"^\\\\[\" section \"\\\\][[:space:]]*$\" {\n        in_section=1\n        print\n        next\n    }\n\n    /^\\[/ && in_section {\n        in_section=0\n    }\n\n    in_section && $0 == key \"=\" value {\n        next\n    }\n\n    { print }\n    ' \"$file\" > \"$file.tmp\" && mv \"$file.tmp\" \"$file\"\n}\n#\n#------------------------------------------------\n## SET VARIABLES / VALUES ##\n#------------------------------------------------\n## Server Name, Admin details\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"ServerName\" \"${SERVER_NAME}\"\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"AdminName\" \"${ADMIN_NAME}\"\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"AdminEmail\" \"${ADMIN_EMAIL}\"\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"Region\" \"11\"\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"MOTDLine1\" \"${MOTD}\"\nini_set \"$CONFIG\" \"Engine.GameReplicationInfo\" \"ShortName\" \"${SV_SHORTNAME}\"\n#\n## Check if password protect is set & set\nif [ -n \"${GAME_PASSWORD}\" ]; then\n    ini_set \"$CONFIG\" \"Engine.GameInfo\" \"GamePassword\" \"${GAME_PASSWORD}\"\nfi\n#\n## Faster Downloads?\nif [ -n \\\"${FASTDL_URL}\\\" ]; then\n  ini_set \"$CONFIG\" \"IpDrv.HTTPDownload\" \"RedirectToURL\" \"${FASTDL_URL}\"\n  ini_set \"$CONFIG\" \"IpDrv.HTTPDownload\" \"UseCompression\" \"True\"\nfi\n#\n## Remove standard master servers\nsed -i '/^\\[Engine\\.GameEngine\\][[:space:]]*$/,/^\\[.*\\]/ {\n    /^[[:space:]]*ServerActors=.*MasterServerAddress=/d\n}' \"$CONFIG\"\n#\n## Add aftermarket master server actors (i.e. master server uplink) in (openspy,333networks etc)\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.333networks.com MasterServerPort=27900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.qtracker.com MasterServerPort=27900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.newbiesplayground.net MasterServerPort=28900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.errorist.eu MasterServerPort=27900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.openspy.net MasterServerPort=27900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master.oldunreal.com MasterServerPort=27900\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerActors\" \"IpServer.UdpServerUplink MasterServerAddress=master2.oldunreal.com MasterServerPort=27900\"\n#\n## Enable advertisement on master servers\nini_set \"$CONFIG\" \"IpServer.UdpServerUplink\" \"DoUpLink\" \"True\"\nini_set \"$CONFIG\" \"IpServer.UdpServerUplink\" \"UpdateMinutes\" \"1\"\n\n## Performance - Up the max tick rate\nini_set \"$CONFIG\" \"IpDrv.TcpNetDriver\" \"NetServerMaxTickRate\" \"30\"\n#\n## Enable the web server on specified port & set variables\nini_set \"$CONFIG\" \"UWeb.WebServer\" \"ListenPort\" \"${WEBADMIN_PORT}\"\nini_set \"$CONFIG\" \"UWeb.WebServer\" \"bEnabled\" \"True\"\nini_set \"$CONFIG\" \"UTServerAdmin.UTServerAdmin\" \"AdminUsername\" \"${WEBADMIN_USER}\"\nini_set \"$CONFIG\" \"UTServerAdmin.UTServerAdmin\" \"AdminPassword\" \"${WEBADMIN_PASS}\"\n#\n## Add some bots by default\n## DM ##\nini_set \"$CONFIG\" \"Botpack.DeathMatchPlus\" \"MinPlayers\" \"${DM_MIN_PLAYERS}\"\nini_set \"$CONFIG\" \"Botpack.DeathMatchPlus\" \"InitialBots\" \"4\"\n## CTF ##\nini_set \"$CONFIG\" \"Botpack.CTFGame\" \"MinPlayers\" \"${CTF_MIN_PLAYERS}\"\nini_set \"$CONFIG\" \"Botpack.CTFGame\" \"InitialBots\" \"8\"\n## DOM ##\nini_set \"$CONFIG\" \"Botpack.Domination\" \"MinPlayers\" \"${DOM_MIN_PLAYERS}\"\nini_set \"$CONFIG\" \"Botpack.Domination\" \"InitialBots\" \"8\"\n## AS ##\nini_set \"$CONFIG\" \"Botpack.Assault\" \"MinPlayers\" \"{AS_MIN_PLAYERS}\"\nini_set \"$CONFIG\" \"Botpack.Assault\" \"InitialBots\" \"8\"\n## TDM ##\nini_set \"$CONFIG\" \"Botpack.TeamGamePlus\" \"MinPlayers\" \"${TDM_MIN_PLAYERS}\"\nini_set \"$CONFIG\" \"Botpack.TeamGamePlus\" \"InitialBots\" \"8\"\n#\n## Set MaxPlayers to Variable\nini_set \"$CONFIG\" \"Engine.GameInfo\" \"MaxPlayers\" \"${MAX_PLAYERS}\"\n#\n## Set Bot Difficulty 0-7 (Novice-Average-Experienced-Skilled-Adept-Masterful-Inhuman-Godlike)\nini_set \"$USERCFG\" \"Botpack.ChallengeBotInfo\" \"Difficulty\" \"${BOT_SKILL}\"\n#\n## Make Mutators available\n#FlagAnnouncementsV2\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"FlagAnnouncementsV2\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"DefaultAnnouncements\"\n#KickIdlePlayers\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"KickIdlePlayers2\"\n#WhoPushedMe\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"EnhancedItems\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"WhoPushedMe\"\n\n##Make Mods available\n#BunnyTrack\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"BTPPUser\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"CountryFlags3\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"BTPlusPlusPublicUTBT_beta3\"\n#ChaosUT\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"UTChaosMap\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"ChaosUTRHUD\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"ChaosUT\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"ChaosUTMiscMuts\"\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"ChaosGames\"\n\n#MonsterHunt\nini_add_array_value \"$CONFIG\" \"Engine.GameEngine\" \"ServerPackages\" \"MonsterHunt\"\n\n# Map rotation scripts\nif [ -n \"${MAP_ROTATION}\" ]; then\n    echo \"${MAP_ROTATION}\" | tr ',' '\\\\n' > System/MapList.txt\nfi\n##---------------------------------------------\n## SERVER START ##\n## Depends on architecture specified in variable\n##---------------------------------------------\n\nSV_START=\"${MAP}.unr?Game=${GAME_TYPE}?mutator=${MUTATORS}\"\nLOGFILE=\"$HOME/Logs/server-$(date +'%Y%m%d_%H%M%S').log\"\nINI=\"$HOME/UT.ini\"\nUSERINI=\"$HOME/UTUser.ini\"\n#\nexport LD_LIBRARY_PATH=/home/container/System\n#\necho \"Starting UT99 ${ARCHITECTURE}-bit Linux Dedicated Server\"\nif [ \"${ARCHITECTURE}\" -eq 64 ]; then\n    ./System64/ucc-bin-amd64 server $SV_START ini=$INI userini=$USERINI multihome=0.0.0.0 log=$LOGFILE port=${SERVER_PORT} -nohomedir\n  else\n    ./System/ucc-bin server $SV_START ini=$INI userini=$USERINI multihome=0.0.0.0 log=$LOGFILE port=${SERVER_PORT} -nohomedir\nfi\nEOF\n\nchmod +x ut99_start.sh\n\necho \"----------------------\"\necho \"Installation complete.\"\necho \"----------------------\""
+    }
+  },
+  "startup_commands": {
+    "Default_ut99": "./ut99_start.sh"
+  },
+  "force_outgoing_ip": false,
+  "separate_port": false,
+  "features": [],
+  "docker_images": {
+    "Debian": "ghcr.io/pelican-eggs/steamcmd:debian"
+  },
+  "file_denylist": [],
+  "variables": [
+    {
+      "name": "Start Map",
+      "name_translations": {},
+      "description": "Some options:\nCTF-Face\nCTF-Face][\nCTF-LavaGiant\nDM-Morpheus\nDM-Liandri\nDM-Fractal\nDM-Oblivion\nDM-Fetid\nDOM-Cryptic\nDOM-Cinder\nDOM-Gearbolt\nDOM-Leadworks\nKOTH_Wilderness\nKOTH_Cerebro\nKOTH_highrise\nMH-Lonely][\nMH-Trials",
+      "description_translations": {},
+      "order": 1,
+      "env_variable": "MAP",
+      "default_value": "DM-Deck16][",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:50"
+      ]
+    },
+    {
+      "name": "Game Mode",
+      "name_translations": {},
+      "description": "Botpack.DeathMatchPlus\nBotpack.CTFGame\nBotpack.TeamGamePlus\nBotpack.Domination\nBotpack.Assault\nBotpack.LastManStanding\nChaosGames.ChaosDeathMatchPlus\nChaosGames.ChaosCTFGame\nChaosGames.ChaosTeamGamePlus\nChaosgames.ChaosKOTH\nChaosgames.ChaosTeamKOTH\nChaosgames.ChaosAssault\nChaosgames.ChaosDomination\nChaosgames.ChaosLastManStanding\nChaosgames.ChaosSwordArena\nChaosgames.ChaosTeamSwordArena\nBTPlusPlusv099.BTPlusPlus\nMonsterHunt.MonsterHunt",
+      "description_translations": {},
+      "order": 2,
+      "env_variable": "GAME_TYPE",
+      "default_value": "Botpack.DeathMatchPlus",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "in:Botpack.DeathMatchPlus,Botpack.CTFGame,Botpack.TeamGamePlus,Botpack.Domination,Botpack.Assault,Botpack.LastManStanding,ChaosGames.ChaosDeathMatchPlus,ChaosGames.ChaosCTFGame,ChaosGames.ChaosTeamGamePlus,Chaosgames.ChaosKOTH,Chaosgames.ChaosTeamKOTH,Chaosgames.ChaosAssault,Chaosgames.ChaosDomination,Chaosgames.ChaosLastManStanding,Chaosgames.ChaosSwordArena,Chaosgames.ChaosTeamSwordArena,BTPlusPlusv099.BTPlusPlus,MonsterHunt.MonsterHunt"
+      ]
+    },
+    {
+      "name": "Mutators",
+      "name_translations": {},
+      "description": "Available Mutators:\nMapVoteLA13.BDBMapVote\nFlagAnnouncementsV2.FlagAnnouncements\nWhoPushedMe.WhoPushedMe\nKickIdlePlayers2.KickIdlePlayers2\nBotpack.Relic\nBotpack.DarkMatch",
+      "description_translations": {},
+      "order": 3,
+      "env_variable": "MUTATORS",
+      "default_value": "MapVoteLA13.BDBMapVote,FlagAnnouncementsV2.FlagAnnouncements,WhoPushedMe.WhoPushedMe,KickIdlePlayers2.KickIdlePlayers2",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:200"
+      ]
+    },
+    {
+      "name": "Server Name",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 4,
+      "env_variable": "SERVER_NAME",
+      "default_value": "My UT99 Server",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:100"
+      ]
+    },
+    {
+      "name": "Admin Name",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 5,
+      "env_variable": "ADMIN_NAME",
+      "default_value": "Admin",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:100"
+      ]
+    },
+    {
+      "name": "Admin Email",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 6,
+      "env_variable": "ADMIN_EMAIL",
+      "default_value": "admin@example.com",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:100"
+      ]
+    },
+    {
+      "name": "Max Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 7,
+      "env_variable": "MAX_PLAYERS",
+      "default_value": "16",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "numeric",
+        "min:1",
+        "max:64"
+      ]
+    },
+    {
+      "name": "MOTD",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 8,
+      "env_variable": "MOTD",
+      "default_value": "Welcome to UT99!",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:200"
+      ]
+    },
+    {
+      "name": "Game Password",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 9,
+      "env_variable": "GAME_PASSWORD",
+      "default_value": null,
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:50"
+      ]
+    },
+    {
+      "name": "Web Admin User",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 10,
+      "env_variable": "WEBADMIN_USER",
+      "default_value": "admin",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:50"
+      ]
+    },
+    {
+      "name": "Web Admin Password",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 11,
+      "env_variable": "WEBADMIN_PASS",
+      "default_value": "changeme",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:50"
+      ]
+    },
+    {
+      "name": "FastDL URL",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 12,
+      "env_variable": "FASTDL_URL",
+      "default_value": "https://fastdl.hiimcody1.com/ut99/",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "nullable",
+        "string",
+        "max:200"
+      ]
+    },
+    {
+      "name": "Web Admin port",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 13,
+      "env_variable": "WEBADMIN_PORT",
+      "default_value": "5080",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "between:1024,65535",
+        "numeric"
+      ]
+    },
+    {
+      "name": "Architecture",
+      "name_translations": {},
+      "description": "Changes which server bin the startup file runs. Helps when 32-bit is broken due to dependencies etc",
+      "description_translations": {},
+      "order": 14,
+      "env_variable": "ARCHITECTURE",
+      "default_value": "64",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "in:32,64"
+      ]
+    },
+    {
+      "name": "DM Minimum Players",
+      "name_translations": {},
+      "description": "Minimum players. UT99 will add bots to fill to minimum, once user has joined",
+      "description_translations": {},
+      "order": 15,
+      "env_variable": "DM_MIN_PLAYERS",
+      "default_value": "4",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "max:32"
+      ]
+    },
+    {
+      "name": "CTF Minimum Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 16,
+      "env_variable": "CTF_MIN_PLAYERS",
+      "default_value": "8",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "max:32"
+      ]
+    },
+    {
+      "name": "DOM Minimum Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 17,
+      "env_variable": "DOM_MIN_PLAYERS",
+      "default_value": "8",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "max:32"
+      ]
+    },
+    {
+      "name": "TDM Minimum Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 18,
+      "env_variable": "TDM_MIN_PLAYERS",
+      "default_value": "8",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "max:32"
+      ]
+    },
+    {
+      "name": "Server ShortName",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 19,
+      "env_variable": "SV_SHORTNAME",
+      "default_value": "UT99",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:15"
+      ]
+    },
+    {
+      "name": "Bot Skill",
+      "name_translations": {},
+      "description": "Sets bot skill level 0-7 (Novice/Average/Experienced/Skilled/Adept/Masterful/Inhuman/Godlike). Recommend 3-5 generally",
+      "description_translations": {},
+      "order": 20,
+      "env_variable": "BOT_SKILL",
+      "default_value": "5",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "between:0,7"
+      ]
+    }
+  ]
+}
