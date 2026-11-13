@@ -1,0 +1,401 @@
+{
+  "uuid": "66dcf9aa-6057-4326-a8ee-1c96ce7c6fac",
+  "name": "BF2142-Reclamation",
+  "description": null,
+  "author": "henwoodenator@gmail.com",
+  "config": {
+    "files": {
+      "mods/bf2142/settings/serversettings.con": {
+        "create_new": false,
+        "parser": "file",
+        "replace": [
+          {
+            "match": "sv.serverName",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.serverName \"{{server.build.env.SERVER_NAME}}\""
+          },
+          {
+            "match": "sv.internet",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.internet {{server.build.env.INTERNET}}"
+          },
+          {
+            "match": "sv.punkBuster",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.punkBuster {{server.build.env.PB}}"
+          },
+          {
+            "match": "sv.maxPlayers",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.maxPlayers {{server.build.env.MAX_PLAYERS}}"
+          },
+          {
+            "match": "sv.serverPort",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.serverPort {{server.build.default.port}}"
+          },
+          {
+            "match": "sv.welcomeMessage",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.welcomeMessage \"{{server.build.env.WELCOME}}\""
+          },
+          {
+            "match": "sv.gameSpyPort",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.gameSpyPort {{server.build.env.OPENSPY_PORT}}"
+          },
+          {
+            "match": "sv.autoBalanceTeam",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.autoBalanceTeam {{server.build.env.AUTO_BALANCE}}"
+          },
+          {
+            "match": "sv.botSkill",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.botSkill {{server.build.env.BOT_SKILL}}"
+          },
+          {
+            "match": "sv.soldierFriendlyFire",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.soldierFriendlyFire {{server.build.env.FRIENDLY_FIRE}}"
+          },
+          {
+            "match": "sv.vehicleFriendlyFire",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.vehicleFriendlyFire {{server.build.env.FRIENDLY_FIRE}}"
+          },
+          {
+            "match": "sv.soldierSplashFriendlyFire",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.soldierSplashFriendlyFire {{server.build.env.FRIENDLY_FIRE}}"
+          },
+          {
+            "match": "sv.vehicleSplashFriendlyFire",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "sv.vehicleSplashFriendlyFire {{server.build.env.FRIENDLY_FIRE}}"
+          }
+        ]
+      },
+      "mods/bf2142/ai/aidefault.ai": {
+        "create_new": false,
+        "parser": "file",
+        "replace": [
+          {
+            "match": "aiSettings.maxBotsIncludeHumans",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "aiSettings.maxBotsIncludeHumans 0"
+          },
+          {
+            "match": "aiSettings.setMaxNBots",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "aiSettings.setMaxNBots 32"
+          },
+          {
+            "match": "aiSettings.setBotSkill",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "aiSettings.setBotSkill 0.4 {{server.build.env.BOT_SKILL}}"
+          }
+        ]
+      },
+      "mods/bf2142/settings/maplist.con": {
+        "create_new": false,
+        "parser": "file",
+        "replace": [
+          {
+            "match": "mapList.append minsk gpm_cq 32",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append minsk gpm_cq 32"
+          },
+          {
+            "match": "mapList.append suez_canal gpm_cq 32",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append suez_canal gpm_cq 32"
+          },
+          {
+            "match": "mapList.append verdun gpm_cq 32",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append verdun gpm_cq 32"
+          },
+          {
+            "match": "mapList.append camp_gibraltar gpm_nv 16",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append camp_gibraltar gpm_nv 16"
+          },
+          {
+            "match": "mapList.append tunis_harbor gpm_nv 16",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append tunis_harbor gpm_nv 16"
+          },
+          {
+            "match": "mapList.append fall_of_berlin gpm_cq 32",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append fall_of_berlin gpm_cq 32"
+          },
+          {
+            "match": "mapList.append cerbere_landing gpm_nv 16",
+            "insert_new": true,
+            "update_existing": false,
+            "if_value": null,
+            "replace_with": "mapList.append cerbere_landing gpm_nv 16"
+          }
+        ]
+      },
+      "mods/bf2142/ai/aidefaultmultiplayer.ai": {
+        "create_new": false,
+        "parser": "file",
+        "replace": [
+          {
+            "match": "aiSettings.setAutoSpawnBots",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "aiSettings.setAutoSpawnBots {{server.build.env.MP_BOTS}}"
+          },
+          {
+            "match": "aiSettings.setMaxNBots",
+            "insert_new": false,
+            "update_existing": true,
+            "if_value": null,
+            "replace_with": "aiSettings.setMaxNBots 32"
+          }
+        ]
+      }
+    },
+    "startup": {
+      "done": [
+        "\"dLoaded 100%\""
+      ],
+      "strip_ansi": false
+    },
+    "stop": {
+      "type": "signal",
+      "value": "SIGINT"
+    }
+  },
+  "scripts": {
+    "installation": {
+      "container": "ghcr.io/pelican-eggs/yolks:debian",
+      "entrypoint": "/bin/bash",
+      "content": "#!/bin/bash\n#\n##---------------------------------------------\n## henwoodenator's BF2142 Calagopus install script\n##---------------------------------------------\n## GAME:        Battlefield 2142 w/ OpenSpy patch\n## DATE:        Nov 2026\n## PLATFORM:    Calagopus Panel \n## AUTHOR:      henwoodenator / drPyro / mister_apocalypse\n## CONTAINER:   Installer container ghcr.io/pelican-eggs/yolks:debian\n##              Running container ghcr.io/pelican-eggs/steamcmd:debian\n#\n## DESCRIPTION: BF2142 Install script for Calagopus Panel. Should also work with Pelican / Pterodactyl \n#               but untested. Downloads BF2142 linux dedicated server files. Not sure if it needs \n#               reclamation mod / maps yet. \n#\n## CREDITS:     Self\n##---------------------------------------------\n#\n## Uncomment the below line if you want full verbose console output\nset -x\n#\n##---------------------------------------------\n## INSTALL PREREQUSITES ##\n##---------------------------------------------\n#apt install bzip2\ncd /mnt/server\n##---------------------------------------------\n## DOWNLOAD & UNPACK 1.50 SERVER FILES ##\n##---------------------------------------------\necho 'Downloading and installing 1.50 linux server files'\nwget -O bf2142-server.tar.gz https://github.com/henwoodenator/Calagopus_Eggs/raw/refs/heads/main/bf2142/bf2142-linuxded-1.10.112.tar.gz\ntar -xzf bf2142-server.tar.gz\ncp -r \\\n    bf2142-linuxded-1.10.112/admin \\\n    bf2142-linuxded-1.10.112/adminutils \\\n    bf2142-linuxded-1.10.112/mods \\\n    bf2142-linuxded-1.10.112/python \\\n    bf2142-linuxded-1.10.112/readmes \\\n    bf2142-linuxded-1.10.112/bin \\\n    bf2142-linuxded-1.10.112/pylib-2.3.4.zip \\\n    bf2142-linuxded-1.10.112/rotate_demo.cfg \\\n    bf2142-linuxded-1.10.112/lowercaseDir.py \\\n    bf2142-linuxded-1.10.112/start.sh \\\n    ./\n## Install missing libraries so I dont have to make a custom yolk / image\nwget https://ftp.debian.org/debian/pool/main/n/ncurses/libtinfo5_6.4-4_amd64.deb\nwget https://ftp.debian.org/debian/pool/main/n/ncurses/libncurses5_6.4-4_amd64.deb\ndpkg-deb -x libtinfo5_*.deb extracted\ndpkg-deb -x libncurses5_*.deb extracted2\ncp extracted/lib/x86_64-linux-gnu/libtinfo.so.5* /mnt/server/bin/amd-64/\ncp extracted2/lib/x86_64-linux-gnu/libncurses.so.5* /mnt/server/bin/amd-64/\n##---------------------------------------------\n## INSTALL PUNKBUSTER BINARIES ##\n##---------------------------------------------\ncp -r bf2142-linuxded-1.10.112/pb_amd-64/* ./\n##---------------------------------------------\n## REMOVE EXTRA FILES ##\n##---------------------------------------------\nrm -r bf2142-linuxded-1.10.112 bf2142-server.tar.gz\nrm -r libncurses5_*.deb libtinfo5_*.deb\nrm -r extracted extracted2\n##---------------------------------------------\n## Downloading Reclamation MapPack ##\n##---------------------------------------------\n#echo 'Downloading Reclamation Map Pack - Please wait (6GB)'\n#curl -L -A \"Mozilla/5.0\" \\\n#     -o map_pack.zip \\\n#     \"https://www.moddb.com/downloads/mirror/287584/134/efb622b782f67fbe36d9daf2be6559b8\"\n#if ! unzip -t map_pack.zip >/dev/null 2>&1; then\n#    echo \"Download failed\"\n#    exit 1\n#fi\n#curl -o map_pack.zip https://www.moddb.com/downloads/mirror/287584/134/efb622b782f67fbe36d9daf2be6559b8\n#unzip map_pack.zip\necho 'Installation Complete'"
+    }
+  },
+  "startup_commands": {
+    "Default": "./start.sh +provider EA +region AU +type 1"
+  },
+  "force_outgoing_ip": false,
+  "separate_port": false,
+  "features": [],
+  "docker_images": {
+    "SteamCMD": "ghcr.io/pelican-eggs/steamcmd:debian"
+  },
+  "file_denylist": [],
+  "variables": [
+    {
+      "name": "Server Name",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 1,
+      "env_variable": "SERVER_NAME",
+      "default_value": "My BF2142 Server",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "string",
+        "max:25"
+      ]
+    },
+    {
+      "name": "Internet / LAN Server",
+      "name_translations": {},
+      "description": "1 Internet, 0 LAN",
+      "description_translations": {},
+      "order": 2,
+      "env_variable": "INTERNET",
+      "default_value": "1",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "in:1,0"
+      ]
+    },
+    {
+      "name": "PunkBuster?",
+      "name_translations": {},
+      "description": "Punkbuster enabled?",
+      "description_translations": {},
+      "order": 3,
+      "env_variable": "PB",
+      "default_value": "0",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "in:0,1"
+      ]
+    },
+    {
+      "name": "Max Players",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 4,
+      "env_variable": "MAX_PLAYERS",
+      "default_value": "32",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "between:8,64",
+        "integer"
+      ]
+    },
+    {
+      "name": "Welcome Message",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 5,
+      "env_variable": "WELCOME",
+      "default_value": "Welcome!",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "string",
+        "max:40"
+      ]
+    },
+    {
+      "name": "OpenSpy Port",
+      "name_translations": {},
+      "description": "Required for matchmaking. Usually make the second allocation",
+      "description_translations": {},
+      "order": 6,
+      "env_variable": "OPENSPY_PORT",
+      "default_value": null,
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "int",
+        "required",
+        "between:2000,65535"
+      ]
+    },
+    {
+      "name": "Auto Balance Teams",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 7,
+      "env_variable": "AUTO_BALANCE",
+      "default_value": "1",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "int",
+        "in:0,1",
+        "required"
+      ]
+    },
+    {
+      "name": "Bot Skill",
+      "name_translations": {},
+      "description": "0-1 scale (1 being most skilled)",
+      "description_translations": {},
+      "order": 8,
+      "env_variable": "BOT_SKILL",
+      "default_value": "0.5",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "in:0.1,0.2,0.3,0.4,0.5,0.6,0.7.0.8.0.9"
+      ]
+    },
+    {
+      "name": "Friendly Fire %",
+      "name_translations": {},
+      "description": null,
+      "description_translations": {},
+      "order": 9,
+      "env_variable": "FRIENDLY_FIRE",
+      "default_value": "100",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "required",
+        "integer",
+        "between:0,100"
+      ]
+    },
+    {
+      "name": "Multiplayer Bots",
+      "name_translations": {},
+      "description": "Bots in multiplayer?",
+      "description_translations": {},
+      "order": 10,
+      "env_variable": "MP_BOTS",
+      "default_value": "0",
+      "user_viewable": true,
+      "user_editable": true,
+      "secret": false,
+      "rules": [
+        "in:0,1"
+      ]
+    }
+  ]
+}
